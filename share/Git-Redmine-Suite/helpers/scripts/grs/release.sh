@@ -1,7 +1,6 @@
 function release_start {
   declare -a TASKS=($@)
 
-  set -e
   git_refresh_local_repos
   git_local_repos_is_clean
   git checkout master
@@ -10,7 +9,6 @@ function release_start {
   git checkout devel
   git merge origin/devel
   git_local_repos_is_sync
-  set +e
 
   echo ""
 
@@ -136,7 +134,6 @@ function release_finish {
       exit 1
   fi
 
-  set -e
   git checkout "$BRNAME"
   git_refresh_local_repos
   git_local_repos_is_clean
@@ -146,7 +143,6 @@ function release_finish {
   git checkout devel
   git merge origin/devel
   git_local_repos_is_sync
-  set +e
 
 
   if [ -z "$REDMINE_CHAIN_FINISH" ] && [ -z "$REDMINE_FORCE" ] && ! ask_question --question="Do you really want to finish the release of these tasks : ${TASKS[*]} ?"; then

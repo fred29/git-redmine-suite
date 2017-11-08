@@ -116,10 +116,10 @@ function review_abort {
     exit 1
   fi
 
-  set -e
+  #set -e
   git checkout devel
   git branch -D "$BRNAME"
-  set +e
+  #set +e
   review_cleanup_config "$TASK"
 
   if ! redmine-check-task --task_id "$TASK" --status_ids "$REDMINE_REVIEW_IN_PROGRESS" --assigned_to_id "$REDMINE_USER_ID"; then
@@ -187,14 +187,14 @@ $MESSAGE
 "
   fi
 
-  set -e
+  #set -e
   TAG=$(git rev-parse "$BRNAME")
   git checkout "$BRNAME"
   git push -f origin "$BRNAME":"$BRNAME"
   git checkout devel
   git branch -D "$BRNAME"
   review_cleanup_config "$TASK"
-  set +e
+  #set +e
 
   echo ""
 
@@ -232,14 +232,14 @@ function review_finish {
   fi
   
   BRNAME=$(git config "redmine.review.$TASK.branch")
-  set -e
+  #set -e
   git checkout "$BRNAME"
   git_refresh_local_repos
   git_local_repos_is_clean
   git_local_repos_is_sync_from_devel
   git checkout devel
   git_local_repos_is_sync
-  set +e
+  #set +e
 
   TASK_TITLE=$(git config "redmine.review.$TASK.title")
   TASK_DEV=$(redmine-get-task-developers --task_id="$TASK" --status_ids="$REDMINE_TASK_IN_PROGRESS")
@@ -258,7 +258,7 @@ function review_finish {
   ADDITIONAL_MESSAGE=""
   REV_FROM=$(git rev-parse origin/devel)
 
-  set -e
+  #set -e
   git merge --no-ff "$BRNAME" -m "Merge $BRNAME"
   echo "    * $TASK_TITLE ($TASK_DEV)" > "$CHANGELOG".new
   touch "$CHANGELOG"
@@ -272,7 +272,7 @@ function review_finish {
   git commit -m "reflect changes" "$CHANGELOG" || true
   git push origin devel:devel
   git branch -D "$BRNAME"
-  set +e
+  #set +e
   git rev-parse --verify -q origin/"$BRNAME" > /dev/null && git push origin :"$BRNAME"
   review_cleanup_config "$TASK"
 
