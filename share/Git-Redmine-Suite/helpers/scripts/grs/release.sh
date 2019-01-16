@@ -159,8 +159,8 @@ function release_finish {
   git checkout master
   git merge --no-ff devel -m "Merge $BRNAME"
   git tag -fm "release v$V: ${TASKS[*]}" "v$VERSION"
-  git push origin master:master
   git push origin "tags/v$VERSION"
+  git push origin master:master
   git checkout devel
   git branch -d "$BRNAME"
   git config --remove-section redmine.release
